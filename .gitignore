@@ -1,0 +1,16 @@
+
+/log/*
+/tmp/*
+!/log/.keep
+!/tmp/.keep
+.idea/*
+
+config/database.yml
+config/secrets.yml
+/node_modules
+/yarn-error.log
+
+.byebug_history
+/public/packs
+/public/uploads
+/public/zip*
