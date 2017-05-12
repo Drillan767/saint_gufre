@@ -1,10 +1,12 @@
 class HomesController < ApplicationController
   before_action :set_home, only: [:show, :edit, :update, :destroy]
+  require 'i18n'
 
   # GET /homes
   # GET /homes.json
   def index
-    @homes = Home.all
+    @home = Home.new
+    @files = FileDetail.all
   end
 
   # GET /homes/1
@@ -27,9 +29,24 @@ class HomesController < ApplicationController
     @home = Home.new(home_params)
 
     respond_to do |format|
+
       if @home.save
-        format.html { redirect_to @home, notice: 'Home was successfully created.' }
-        format.json { render :show, status: :created, location: @home }
+
+        tags = []
+        @home.tags.split(', ').map do |tag|
+          tags.push(tag)
+        end
+
+        @home.fichiers.each do |fichier|
+
+          path = fichier.url
+          unless FileDetail.exists?(path: path)
+            FileDetail.create(path: path, tags: tags)
+          end
+        end
+
+        format.html { redirect_to root_path, notice: 'Home was successfully created.' }
+        format.json { render :show, status: :created, location: root_path }
       else
         format.html { render :new }
         format.json { render json: @home.errors, status: :unprocessable_entity }
@@ -69,6 +86,6 @@ class HomesController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def home_params
-      params.require(:home).permit(:label, :fichiers)
+      params.require(:home).permit(:tags, {fichiers: []})
     end
 end

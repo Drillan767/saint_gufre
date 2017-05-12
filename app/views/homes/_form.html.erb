@@ -11,14 +11,16 @@
     </div>
   <% end %>
 
-  <div class="field">
-    <%= form.label :label %>
-    <%= form.text_field :label, id: :home_label %>
-  </div>
 
   <div class="field">
     <%= form.label :fichiers %>
-    <%= form.text_field :fichiers, id: :home_fichiers %>
+    <%= form.file_field :fichiers, id: :home_fichiers, multiple: true %>
+  </div>
+
+
+  <div class="field">
+    <%= form.label :tags %>
+    <%= form.text_field :tags, id: :home_label %>
   </div>
 
   <div class="actions">
