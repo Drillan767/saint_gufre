@@ -1,5 +1,6 @@
+<%= image_tag asset_path('logo'), class: 'logo' %>
+
 <p id="notice"><%= notice %></p>
-<%= render 'form', home: @home %>
 
 <div id="gufrebox"></div>
 
@@ -35,3 +36,5 @@
 
   <input type="submit" value="Télécharger" />
 </form>
+
+<%= csrf_meta_tag %>

@@ -1,11 +1,11 @@
 class HomesController < ApplicationController
   before_action :set_home, only: [:show, :edit, :update, :destroy]
+  skip_before_action :verify_authenticity_token, only: [:destroy, :file_destroy], raise: false
   require 'i18n'
 
   # GET /homes
   # GET /homes.json
   def index
-    @home = Home.new
     @files = FileDetail.all
   end
 
@@ -72,10 +72,24 @@ class HomesController < ApplicationController
   # DELETE /homes/1.json
   def destroy
     @home.destroy
+    skip_before_action :verify_authenticity_token
     respond_to do |format|
-      format.html { redirect_to homes_url, notice: 'Home was successfully destroyed.' }
+      format.html { redirect_to root_path, notice: 'Home was successfully destroyed.' }
       format.json { head :no_content }
     end
+  end
+
+  # DELETE file_destroy/1
+  def file_destroy
+    FileDetail.find(params[:id]).destroy!
+    redirect_to root_path
+  end
+
+  # GET /all_files
+
+  def all_files
+    @all_files = FileDetail.all
+    render json: @all_files
   end
 
   private
