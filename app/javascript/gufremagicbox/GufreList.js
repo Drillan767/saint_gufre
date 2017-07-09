@@ -4,9 +4,9 @@
 import React, { Component } from 'react';
 import classNames from 'classnames';
 import PropTypes from 'prop-types';
+import Input from 'material-ui/Input/Input'
 import { withStyles, createStyleSheet } from 'material-ui/styles';
 import keycode from 'keycode';
-import Button from 'material-ui/Button';
 import $ from 'jquery';
 import Table, {
     TableBody,
@@ -69,10 +69,12 @@ class EnhancedTableHead extends Component {
                                 <TableSortLabel
                                     active={orderBy === column.id}
                                     direction={order}
-                                    onClick={() => { column.id === 'name' ?
+                                    onClick={column.id === 'name' ?
                                         this.createSortNameHandler(column.id) :
-                                        column.id === 'creation_date' ?
-                                        this.createSortDateHandler(column.id) : console.log('merde') }}
+                                        (column.id === 'creation_time' ? this.createSortDateHandler(column.id) :
+                                                () => { console.log('nope') }
+                                        )
+                                    }
                                 >
                                     {column.label}
                                 </TableSortLabel>
@@ -121,6 +123,8 @@ let EnhancedTableToolbar = props => {
             })}
         >
             <div className={classes.title}>
+                <Input placeholder="Rechercher..." />
+
                 {numSelected > 0
                     ? <Typography type="subheading">
                         {numSelected} fichier(s) sélectionnés
@@ -177,7 +181,7 @@ class EnhancedTable extends Component {
     }
 
     handleRequestNameSort = (event, property) => {
-/*        const orderBy = property;
+        const orderBy = property;
         let order = 'desc';
 
         if (this.state.orderBy === property && this.state.order === 'desc') {
@@ -187,26 +191,33 @@ class EnhancedTable extends Component {
         let reA = /[^a-zA-Z]/g;
         let reN = /[^0-9]/g;
         function sortAlphaNum(a,b) {
-            let aA = a.replace(reA, "");
-            let bA = b.replace(reA, "");
+            let afile = a.path.split('/').pop();
+            let bfile = b.path.split('/').pop();
+            let aA = afile.replace(reA, "");
+            let bA = bfile.replace(reA, "");
             if(aA === bA) {
-                let aN = parseInt(a.replace(reN, ""), 10);
-                let bN = parseInt(b.replace(reN, ""), 10);
-                return aN === bN ? 0 : aN > bN ? 1 : -1;
+                let aN = parseInt(afile.replace(reN, ""), 10);
+                let bN = parseInt(bfile.replace(reN, ""), 10);
+                if(order === 'desc') {
+                    return aN === bN ? 0 : aN > bN ? 1 : -1;
+                } else {
+                    return aN === bN ? 0 : aN > bN ? -1 : 1;
+                }
             } else {
-                return aA > bA ? 1 : -1;
+                if(order === 'desc') {
+                    return aA > bA ? 1 : -1;
+                } else {
+                    return aA > bA ? -1 : 1;
+                }
             }
         }
 
         const data = this.state.data.sort(sortAlphaNum);
-
-        this.setState({ data, order, orderBy });*/
-
-        console.log(event);
+        this.setState({ data, order, orderBy });
     };
 
     handleRequestDateSort = (event, property) => {
-        /*const orderBy = property;
+        const orderBy = property;
         let order = 'desc';
 
         if (this.state.orderBy === property && this.state.order === 'desc') {
@@ -214,10 +225,10 @@ class EnhancedTable extends Component {
         }
 
         const data = this.state.data.sort(
-            (a, b) => (order === 'desc' ? (b[orderBy] > a[orderBy] ? -1 : 1) : (b[orderBy] < a[orderBy] ? -1 : 1))
+            (a,b) => order === 'desc' ? a.created_at > b.created_at ? 1 : -1 : a.created_at < b.created_at ? 1 : -1
         );
 
-        this.setState({ data, order, orderBy });*/
+        this.setState({ data, order, orderBy });
         console.log('handleRequestDateSort cliqué');
     };
 
@@ -270,8 +281,8 @@ class EnhancedTable extends Component {
                         order={order}
                         orderBy={orderBy}
                         onSelectAllClick={this.handleSelectAllClick}
-                        onRequestNameSort={this.handleRequestDateSort}
-                        onRequestDateSort={this.handleRequestNameSort}
+                        onRequestNameSort={this.handleRequestNameSort}
+                        onRequestDateSort={this.handleRequestDateSort}
                     />
                     <TableBody>
                         {data.map(n => {
