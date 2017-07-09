@@ -1,6 +1,6 @@
 import React from 'react';
 import Dropzone from 'react-dropzone';
-import Button from 'material-ui/RaisedButton';
+import Button from 'material-ui/Button';
 import TextField from 'material-ui/TextField';
 import $ from 'jquery';
 
@@ -26,9 +26,8 @@ export default class GufreForm extends React.Component {
 
                     <div className="file_upload">
                         <TextField
-                            hintText="Séparer les tags d'une virgule"
-                            floatingLabelText="Tags"
-                            multiLine={true}
+                            InputProps={{ placeholder: "Séparer les tags d'une virgule" }}
+                            multiLine
                             rows={2}
                             name="home[tags]"
                             required={ true }/>
@@ -47,7 +46,7 @@ export default class GufreForm extends React.Component {
                             { this.state.files.map(f => <li>{ f.name } ({f.size} octets)</li>) }
                         </ul>
                     </div>
-                    <Button label="Uploader" primary={true} type="submit" />
+                    <Button label="Uploader" color="primary" type="submit" />
                 </form>
             </section>
         )
