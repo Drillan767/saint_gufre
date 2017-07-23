@@ -27,7 +27,6 @@ export default class GufreForm extends React.Component {
                     <div className="file_upload">
                         <TextField
                             InputProps={{ placeholder: "Séparer les tags d'une virgule" }}
-                            multiLine
                             rows={2}
                             name="home[tags]"
                             required={ true }/>

@@ -2,7 +2,7 @@
 /* eslint-disable react/no-multi-comp */
 
 import React, { Component } from 'react';
-import classNames from 'classnames';
+// import classNames from 'classnames';
 import PropTypes from 'prop-types';
 import Input from 'material-ui/Input/Input'
 import { withStyles, createStyleSheet } from 'material-ui/styles';
@@ -22,8 +22,6 @@ import Checkbox from 'material-ui/Checkbox';
 import IconButton from 'material-ui/IconButton';
 import DownloadIcon from 'material-ui-icons/FileDownload';
 
-let counter = 0;
-
 const columnData = [
     { id: 'name', numeric: false, disablePadding: true, label: 'Fichier' },
     { id: 'lecture', numeric: false, disablePadding: false, label: 'Lecture' },
@@ -39,6 +37,7 @@ class EnhancedTableHead extends Component {
         onSelectAllClick: PropTypes.func.isRequired,
         order: PropTypes.string.isRequired,
         orderBy: PropTypes.string.isRequired,
+        search: PropTypes.string.isRequired,
     };
 
     createSortNameHandler = property => event => {
@@ -49,8 +48,12 @@ class EnhancedTableHead extends Component {
         this.props.onRequestDateSort(event, property);
     };
 
+    updateSearch(event){
+        this.setState({search: event.target.value })
+    }
+
     render() {
-        const { onSelectAllClick, order, orderBy } = this.props;
+        const { onSelectAllClick, order, orderBy, search } = this.props;
 
         return (
             <TableHead>
@@ -123,7 +126,11 @@ let EnhancedTableToolbar = props => {
             })}
         >
             <div className={classes.title}>
-                <Input placeholder="Rechercher..." />
+                <Input placeholder="Rechercher..."
+                       value={this.state.search}
+                       onClick={this.updateSearch.bind(this)}
+
+                />
 
                 {numSelected > 0
                     ? <Typography type="subheading">
@@ -165,6 +172,7 @@ class EnhancedTable extends Component {
         orderBy: 'calories',
         selected: [],
         data: [],
+        search: '',
         open: false,
     };
 
@@ -176,6 +184,7 @@ class EnhancedTable extends Component {
             dataType: 'json',
             success: function(data){
                 self.setState({data: data});
+                console.log(self.state.data);
             }
         })
     }
@@ -240,6 +249,10 @@ class EnhancedTable extends Component {
         this.setState({ selected: [] });
     };
 
+    updateSearch(event) {
+        this.setState({search: event.target.value})
+    }
+
     handleKeyDown = (event, id) => {
         if (keycode(event) === 'space') {
             this.handleClick(event, id);
@@ -271,7 +284,7 @@ class EnhancedTable extends Component {
 
     render() {
         const classes = this.props.classes;
-        const { data, order, orderBy, selected } = this.state;
+        const { data, order, orderBy, selected, search } = this.state;
 
         return (
             <Paper className={classes.paper}>
@@ -283,6 +296,7 @@ class EnhancedTable extends Component {
                         onSelectAllClick={this.handleSelectAllClick}
                         onRequestNameSort={this.handleRequestNameSort}
                         onRequestDateSort={this.handleRequestDateSort}
+                        onSearchUpdate={this.updateSearch.bind(this)}
                     />
                     <TableBody>
                         {data.map(n => {
