@@ -5,7 +5,8 @@ import $ from 'jquery';
 const columns = [{
     Header: ' ',
     accessor: 'path',
-    // filterable: false,
+    id: 'checkboxes',
+    filterable: false,
     Cell: row => (
         <input
             type="checkbox"
@@ -17,6 +18,7 @@ const columns = [{
 
     Header: 'Fichier',
     accessor: 'path',
+    id: 'path',
 
     sortMethod: (a, b) => {
         let reA = /[^a-zA-Z]/g;
@@ -74,6 +76,7 @@ const columns = [{
 }, {
     Header: 'Tags',
     accessor: 'tags',
+    id: 'tags',
     Cell: row => {
         /* @Todo: Mettre en place ce système de tag par array */
         let tags = row.value.replace(/[^a-zA-Z0-9]/g, "");
