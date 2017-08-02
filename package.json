@@ -31,6 +31,7 @@
     "react-dropzone": "^3.13.1",
     "react-table": "^6.5.1",
     "react-tap-event-plugin": "^2.0.1",
+    "react-toolbox": "^2.0.0-beta.12",
     "sass-loader": "^6.0.6",
     "sockjs-client": "^1.1.4",
     "style-loader": "^0.18.2",
