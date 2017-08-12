@@ -15,20 +15,19 @@ const columns = [{
         />
     )
 }, {
-
-    Header: 'Fichier',
-    accessor: 'path',
-    id: 'path',
+    Header: "Fichier",
+    accessor: "path",
+    id: "files",
 
     sortMethod: (a, b) => {
         let reA = /[^a-zA-Z]/g;
         let reN = /[^0-9]/g;
-        let afile = a.split('/').pop();
-        let bfile = b.split('/').pop();
+        let afile = a.split("/").pop();
+        let bfile = b.split("/").pop();
         let aA = afile.replace(reA, "");
         let bA = bfile.replace(reA, "");
 
-        if(aA === bA) {
+        if (aA === bA) {
             let aN = parseInt(afile.replace(reN, ""), 10);
             let bN = parseInt(bfile.replace(reN, ""), 10);
 
@@ -39,11 +38,15 @@ const columns = [{
     },
 
     Cell: row => {
-        let filename = row.value.split('/').pop();
+        const filename = row.value.split("/").pop();
 
-        return <p>{filename}</p>
+        return <p>{filename}</p>;
+    },
+    filterMethod: (filter, row) => {
+        const filename = row[filter.id].split("/").pop().toLowerCase();
+
+        return filename.startsWith(filter.value);
     }
-
 }, {
     Header: 'Lecture',
     accessor: 'path',
@@ -78,16 +81,28 @@ const columns = [{
     accessor: 'tags',
     id: 'tags',
     Cell: row => {
-        /* @Todo: Mettre en place ce système de tag par array */
-        let tags = row.value.replace(/[^a-zA-Z0-9]/g, "");
+        let tags = row.value.replace(/[^a-zA-Z0-9\s]/g, "");
+        let tag = [];
+        tags.split(' ').map(function(value, i) {
+            tag.push(<span key={i}>{value}</span>);
+        });
 
-        return <p>{tags}</p>
+        return tag;
 
-        /*{ tags.split(' ').map(function(tag, i) {
-            return (
-                <span key={ i } className="chip">{ tag }</span>
-            )
-        })}*/
+    },
+    filterMethod: (filter, row) => {
+        const tags = row[filter.id].replace(/[^a-zA-Z0-9\s]/g, "");
+        let tag = [];
+        tags.split(' ').map(function(value) {
+            tag.push(value);
+        });
+
+        return tag.some(
+            function(v){
+                return v.indexOf(filter.value)>=0
+            }
+        )
+
     }
 }, {
     Header: "Date d'ajout",
@@ -98,6 +113,7 @@ const columns = [{
 
     Cell: row => {
         let date = new Date(row.value);
+        let created_at = date.getDate() + ' / ' + (date.getMonth()+1) + ' / ' + date.getFullYear();
         return (
             <div
                 style={{
@@ -106,10 +122,25 @@ const columns = [{
                     textAlign: 'center',
                 }}
             >
-                <p>{ date.getDate() + '/' + (date.getMonth()+1) + '/' + date.getFullYear() }</p>
+                <p>{ created_at }</p>
             </div>
         )
+    },
+    filterMethod: (filter, row) => {
+        let filterId = new Date(row[filter.id]);
+        let value = filterId.getDate() + ' / ' + (filterId.getMonth()+1) + ' / ' + filterId.getFullYear();
+        let date = [];
+        value.split(' / ').map(function(d) {
+            date.push(d);
+        });
+
+        return date.some(
+            function(v){
+                return v.indexOf(filter.value)>=0
+            }
+        )
     }
+
 }, {
     Header: "Action",
     accessor: 'id',
@@ -137,11 +168,7 @@ export default class Index extends React.Component {
         })
     }
 
-
-
     render() {
-
-        console.log(this.state.filtered);
 
         return (
             <form action="/download/zip">

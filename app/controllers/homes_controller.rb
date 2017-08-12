@@ -1,5 +1,6 @@
 class HomesController < ApplicationController
   before_action :set_home, only: [:show, :edit, :update, :destroy]
+  before_action :authenticate_user!
   skip_before_action :verify_authenticity_token, only: [:destroy, :file_destroy], raise: false
   require 'i18n'
 
