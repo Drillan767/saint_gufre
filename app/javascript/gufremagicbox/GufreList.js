@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactTable from 'react-table';
+import Button from 'material-ui/Button';
 import $ from 'jquery';
 
 const columns = [{
@@ -7,13 +8,30 @@ const columns = [{
     accessor: 'path',
     id: 'checkboxes',
     filterable: false,
-    Cell: row => (
-        <input
-            type="checkbox"
-            name="file_selected[]"
-            value={row.value}
-        />
-    )
+
+    onClick: function () {
+        this.setState({
+            checked: !this.state.checked
+        });
+    },
+
+    Cell: row => {
+
+        function onClick() {
+            console.log($(this).find('input[type=checkbox]'));
+            $(this).find('input:checkbox').prop('checked', true)
+        }
+
+        return (
+            <div style={{height: '100%'}} >
+                <input
+                    type="checkbox"
+                    name="file_selected[]"
+                    value={row.value}
+                />
+            </div>
+        )
+    }
 }, {
     Header: "Fichier",
     accessor: "path",
@@ -83,13 +101,26 @@ const columns = [{
     Cell: row => {
         let tags = row.value.replace(/[^a-zA-Z0-9\s]/g, "");
         let tag = [];
-        tags.split(' ').map(function(value, i) {
-            tag.push(<span key={i}>{value}</span>);
+        let filter = {};
+
+        tags.split(' ').map(function(value) {
+            tag.push(<span onClick={(e)=>setFilter(e, value)} className="tag-name" key={value}>{value}</span>);
         });
 
-        return tag;
+        function setFilter(e, value) {
+            filter.value = value;
+        }
+
+        for(let i = 0; i <= tag.length; i++){
+            if(i % 3 === 0 && i !== 0) {
+                tag.splice(i, 0, <br key={i*i} />);
+            }
+        }
+
+        return <div style={{lineHeight: '30px'}}>{tag}</div>;
 
     },
+
     filterMethod: (filter, row) => {
         const tags = row[filter.id].replace(/[^a-zA-Z0-9\s]/g, "");
         let tag = [];
@@ -145,9 +176,32 @@ const columns = [{
     Header: "Action",
     accessor: 'id',
     filterable: false,
-    Cell: row => (
-        <a href={"/home/" + row.value}>Supprimer</a>
-    )
+    Cell: row => {
+        function sweetDelete(file) {
+
+            let filename = file.path.split("/").pop();
+            swal({
+                title: 'Confirmer la suppression ?',
+                text: "Le fichier " + filename + " va être supprimé",
+                type: 'warning',
+                showCloseButton: true,
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#919393',
+                cancelButtonText:'Annuler',
+                confirmButtonText:
+                    '<a href="/file_destroy/'+file.id+'" >Supprimer</a>',
+            })
+        }
+
+        return (
+            <div className="file-delete">
+                <a className="file-destroy" onClick={()=> sweetDelete(row.row)}>Supprimer</a>
+            </div>
+
+        )
+
+    }
 }];
 
 export default class Index extends React.Component {
@@ -182,7 +236,14 @@ export default class Index extends React.Component {
                     defaultFilterMethod={(filter, row) =>
                         String(row[filter.id]) === filter.value}
                 />
-                <input type="submit" value="Télécharger" />
+                <div className="file-download">
+                    <Button
+                        raised
+                        type="submit"
+                        color="primary">
+                        Télécharger
+                    </Button>
+                </div>
             </form>
         )
     }

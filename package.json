@@ -35,6 +35,7 @@
     "sass-loader": "^6.0.6",
     "sockjs-client": "^1.1.4",
     "style-loader": "^0.18.2",
+    "sweetalert2": "^6.6.8",
     "webpack": "^3.3.0",
     "webpack-manifest-plugin": "^1.2.1",
     "webpack-merge": "^4.1.0"

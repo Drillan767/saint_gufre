@@ -1,5 +1,6 @@
 /*
  *= require 'react-table/react-table.css'
+ *= require 'sweetalert2/dist/sweetalert2.min.css'
  *= require_tree .
  *= require_self
  */
@@ -9,9 +10,17 @@
     src: url('/fonts/Roboto-Regular.ttf') format('truetype');
 }
 
+.logo {
+    text-align: center;
+    padding-top: 15px;
+}
 
 body {
     font-family: Roboto, sans-serif;
+}
+
+.dropzone p {
+    text-align: center;
 }
 
 .login-paper {
@@ -33,4 +42,57 @@ body {
 .login-paper-button {
     text-align: center;
     padding: 30px 0;
+}
+
+.file-system {
+    display: flex;
+    justify-content: center;
+}
+
+.file-preview {
+    margin-left: 50px;
+}
+
+.file-submit, .file-download {
+    margin-top: 30px;
+    text-align: center;
+}
+
+.file-delete {
+    text-align: center;
+    margin-top: 1.5vw;
+}
+
+.file-destroy {
+    width: 100%;
+    background: #2f2f2f;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.tag-system {
+    text-align: center;
+}
+
+.tag-name {
+    background: #2d2d2d;
+    margin: 2px;
+    padding: 2px 3px;
+    border-radius: 6px;
+    color: white;
+}
+
+.swal2-confirm a {
+    color: #fff;
+    text-decoration: none;
+}
+
+.swal2-confirm a:hover {
+    text-decoration: none;
+}
+
+form:nth-child(2) {
+    margin-top: 10vh;
 }

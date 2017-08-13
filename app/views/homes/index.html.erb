@@ -1,40 +1,5 @@
-<%= image_tag asset_path('logo'), class: 'logo' %>
-
 <div id="gufrebox"></div>
 
 <%= link_to('Logout', destroy_user_session_path, method: :delete) %>
-
-<form action="/download/zip">
-  <table>
-    <tr>
-      <th>Sélection</th>
-      <th>Fichier</th>
-      <th>Lecture</th>
-      <th>Tags</th>
-      <th>Date d'ajout</th>
-    </tr>
-    <% @files.each do |f| %>
-      <tr>
-        <td>
-          <input type="checkbox" value="<%= f.path %>" name="file_selected[]" />
-        </td>
-        <td>
-          <%= f.path.split('/')[-1] %>
-        </td>
-        <td>
-          -
-        </td>
-        <td>
-          <%= f.tags %>
-        </td>
-        <td>
-          <%= f.created_at.strftime('%d/%m/%Y') %>
-        </td>
-      </tr>
-    <% end %>
-  </table>
-
-  <input type="submit" value="Télécharger" />
-</form>
 
 <%= csrf_meta_tag %>
