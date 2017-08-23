@@ -5,13 +5,22 @@
       {
         "modules": false,
         "targets": {
-          "node": "current"
+          "browsers": "> 1%",
+          "uglify": true
         },
         "useBuiltIns": true
       }
     ],
     "react"
   ],
-
-  "plugins": ["transform-class-properties"]
+  "plugins": [
+    "syntax-dynamic-import",
+    "transform-object-rest-spread",
+    [
+      "transform-class-properties",
+      {
+        "spec": true
+      }
+    ]
+  ]
 }
